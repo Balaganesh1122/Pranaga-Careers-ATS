@@ -86,9 +86,19 @@ class Application(Base):
     back_populates="application",
     uselist=False,
     )
-    
+
     screening_answer = relationship(
     "ScreeningAnswer",
     back_populates="application",
     uselist=False,
     )
+    notes = relationship(
+    "RecruiterNote",
+    back_populates="application",
+    cascade="all, delete-orphan",
+)
+    interviews = relationship(
+    "Interview",
+    back_populates="application",
+    cascade="all, delete-orphan",
+)

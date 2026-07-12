@@ -8,6 +8,9 @@ from app.schemas.candidate import (
     CandidateResponse,
 )
 from app.services.candidate.candidate_service import CandidateService
+from app.services.auth.dependencies import get_current_candidate
+from app.models.user import User
+
 
 router = APIRouter(
     prefix="/api/candidates",

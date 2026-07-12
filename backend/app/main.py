@@ -7,9 +7,12 @@ from app.api.jobs import router as jobs_router
 from app.api.candidates import router as candidate_router
 from app.api.applications import router as application_router
 from app.api.resume import router as resume_router
+from app.api.recruiter import router as recruiter_router
 from app.api.application_submission import (
     router as application_submission_router,
 )
+from app.api.auth import router as auth_router
+from app.api.admin import router as admin_router
 
 app = FastAPI(
     title="Pranaga Careers ATS API",
@@ -23,7 +26,9 @@ app.include_router(candidate_router)
 app.include_router(application_router)
 app.include_router(resume_router)
 app.include_router(application_submission_router)
-
+app.include_router(auth_router)
+app.include_router(recruiter_router)
+app.include_router(admin_router)
 
 @app.get("/")
 def root():

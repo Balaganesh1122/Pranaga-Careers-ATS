@@ -1,17 +1,28 @@
 from dotenv import load_dotenv
-import os
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Load environment variables
 load_dotenv()
 
 
-class Settings:
-    DATABASE_URL = os.getenv("DATABASE_URL")
-    SECRET_KEY = os.getenv("SECRET_KEY")
-    ALGORITHM = os.getenv("ALGORITHM")
-    ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
-    UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+class Settings(BaseSettings):
+    # Database
+    DATABASE_URL: str
+
+    # JWT
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+
+    # Uploads
+    UPLOAD_FOLDER: str
+
+    # OpenAI
+    OPENAI_API_KEY: str | None = None
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+    )
 
 
 settings = Settings()

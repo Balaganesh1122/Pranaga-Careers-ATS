@@ -5,3 +5,6 @@ from app.models.resume_data import ResumeData
 from app.models.ats_result import ATSResult
 from app.models.screening_answer import ScreeningAnswer
 from app.models.email_log import EmailLog
+from app.models.recruiter_note import RecruiterNote
+from app.models.interview import Interview
+from app.models.user import User
