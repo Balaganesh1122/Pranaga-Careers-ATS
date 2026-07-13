@@ -35,18 +35,36 @@ class InterviewService:
             )
 
         interview = Interview(
+
             application_id=application_id,
-            interviewer_name=request.interviewer_name,
+
             interview_type=request.interview_type,
+
+            interview_round=request.interview_round,
+
+            interviewer_name=request.interviewer_name,
+
+            interviewer_email=request.interviewer_email,
+
             interview_date=request.interview_date,
+
             interview_time=request.interview_time,
+
             meeting_link=request.meeting_link,
+
             location=request.location,
-            remarks=request.remarks,
+
+            status="Scheduled",
+
+            feedback=None,
+
+            rating=None,
         )
 
         db.add(interview)
+
         db.commit()
+
         db.refresh(interview)
 
         return InterviewResponse.model_validate(interview)
@@ -56,14 +74,21 @@ class InterviewService:
 
         interviews = (
             db.query(Interview)
-            .order_by(Interview.interview_date)
+            .order_by(
+                Interview.interview_date,
+                Interview.interview_time,
+            )
             .all()
         )
 
         return InterviewListResponse(
+
             interviews=[
+
                 InterviewResponse.model_validate(i)
+
                 for i in interviews
+
             ]
         )
 
@@ -75,7 +100,9 @@ class InterviewService:
 
         interview = (
             db.query(Interview)
-            .filter(Interview.id == interview_id)
+            .filter(
+                Interview.id == interview_id
+            )
             .first()
         )
 
@@ -96,7 +123,9 @@ class InterviewService:
 
         interview = (
             db.query(Interview)
-            .filter(Interview.id == interview_id)
+            .filter(
+                Interview.id == interview_id
+            )
             .first()
         )
 
@@ -106,12 +135,16 @@ class InterviewService:
                 detail="Interview not found."
             )
 
-        update_data = request.model_dump(exclude_unset=True)
+        update_data = request.model_dump(
+            exclude_unset=True
+        )
 
         for key, value in update_data.items():
+
             setattr(interview, key, value)
 
         db.commit()
+
         db.refresh(interview)
 
         return InterviewResponse.model_validate(interview)
@@ -124,7 +157,9 @@ class InterviewService:
 
         interview = (
             db.query(Interview)
-            .filter(Interview.id == interview_id)
+            .filter(
+                Interview.id == interview_id
+            )
             .first()
         )
 
@@ -135,8 +170,45 @@ class InterviewService:
             )
 
         db.delete(interview)
+
         db.commit()
 
         return InterviewDeleteResponse(
+
             message="Interview deleted successfully."
+
         )
+
+    @staticmethod
+    def submit_feedback(
+        db: Session,
+        interview_id: int,
+        feedback: str,
+        rating: float,
+    ):
+
+        interview = (
+            db.query(Interview)
+            .filter(
+                Interview.id == interview_id
+            )
+            .first()
+        )
+
+        if not interview:
+            raise HTTPException(
+                status_code=404,
+                detail="Interview not found."
+            )
+
+        interview.feedback = feedback
+
+        interview.rating = rating
+
+        interview.status = "Completed"
+
+        db.commit()
+
+        db.refresh(interview)
+
+        return InterviewResponse.model_validate(interview)

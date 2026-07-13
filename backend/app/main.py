@@ -13,6 +13,20 @@ from app.api.application_submission import (
 )
 from app.api.auth import router as auth_router
 from app.api.admin import router as admin_router
+from app.api.public.jobs import router as public_jobs_router
+from app.api.public.home import router as public_home_router
+from app.api.public.departments import router as public_departments_router
+from app.api.public.locations import router as public_locations_router
+from app.api.public.employment_types import router as public_employment_types_router
+from app.api.public.work_modes import router as public_work_modes_router
+from app.api.public.experiences import router as public_experiences_router
+from app.api.candidate_auth import router as candidate_auth_router
+from app.api.candidate_profile import router as candidate_profile_router
+from app.api.resume_upload import router as resume_upload_router
+from app.api.job_application import router as job_application_router
+from app.api.candidate_dashboard import router as candidate_dashboard_router
+
+
 
 app = FastAPI(
     title="Pranaga Careers ATS API",
@@ -29,6 +43,20 @@ app.include_router(application_submission_router)
 app.include_router(auth_router)
 app.include_router(recruiter_router)
 app.include_router(admin_router)
+app.include_router(public_jobs_router)
+app.include_router(public_home_router)
+app.include_router(public_departments_router)
+app.include_router(public_locations_router)
+app.include_router(public_employment_types_router)
+app.include_router(public_work_modes_router)
+app.include_router(public_experiences_router)   
+app.include_router(candidate_auth_router)
+app.include_router(candidate_profile_router)
+app.include_router(resume_upload_router)
+app.include_router(job_application_router)
+app.include_router(candidate_dashboard_router)
+
+
 
 @app.get("/")
 def root():

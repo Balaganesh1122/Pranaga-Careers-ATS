@@ -2,7 +2,12 @@ from pydantic import BaseModel, EmailStr
 
 
 class ApplicationSubmissionRequest(BaseModel):
-    full_name: str
+    first_name: str
+
+    middle_name: str | None = None
+
+    last_name: str
+    
     email: EmailStr
     phone: str
 

@@ -6,9 +6,15 @@ class SkillMatcher:
     @staticmethod
     def normalize(skills):
 
+        if not skills:
+            return set()
+
         normalized = set()
 
         for skill in skills:
+
+            if not skill:
+                continue
 
             key = skill.strip().lower()
 
@@ -32,3 +38,15 @@ class SkillMatcher:
         missing = sorted(job - candidate)
 
         return matched, missing
+
+    @staticmethod
+    def match(candidate_skills, job_skills):
+        """
+        Alias for compare().
+        Keeps compatibility with older code.
+        """
+
+        return SkillMatcher.compare(
+            candidate_skills,
+            job_skills,
+        )

@@ -37,7 +37,12 @@ class ResumeResponse(BaseModel):
 
 class RecruiterApplicationResponse(BaseModel):
     application_id: int
-    candidate_name: str
+    first_name: str
+
+    middle_name: str | None = None
+
+    last_name: str
+    
     email: str
     job_title: str
     ats_score: float
@@ -53,7 +58,12 @@ class RecruiterApplicationResponse(BaseModel):
 class RecruiterApplicationDetailsResponse(BaseModel):
     application_id: int
 
-    candidate_name: str
+    first_name: str
+
+    middle_name: str | None = None
+
+    last_name: str
+    
     email: str
     phone: str
 
@@ -91,7 +101,12 @@ class RecruiterApplicationDetailsResponse(BaseModel):
 
 class TopCandidateResponse(BaseModel):
     application_id: int
-    candidate_name: str
+    first_name: str
+
+    middle_name: str | None = None
+
+    last_name: str
+    
     email: str
     job_title: str
     ats_score: float
@@ -157,9 +172,16 @@ class RecruiterNoteDeleteResponse(BaseModel):
 # ============================================================
 
 class InterviewCreate(BaseModel):
+
     interviewer_name: str
 
+    interviewer_email: Optional[str] = None
+
     interview_type: str
+    # HR / Technical / Managerial / Final
+
+    interview_round: str
+    # Round 1 / Round 2 / Final
 
     interview_date: date
 
@@ -169,13 +191,15 @@ class InterviewCreate(BaseModel):
 
     location: Optional[str] = None
 
-    remarks: Optional[str] = None
-
-
 class InterviewUpdate(BaseModel):
+
     interviewer_name: Optional[str] = None
 
+    interviewer_email: Optional[str] = None
+
     interview_type: Optional[str] = None
+
+    interview_round: Optional[str] = None
 
     interview_date: Optional[date] = None
 
@@ -187,17 +211,31 @@ class InterviewUpdate(BaseModel):
 
     status: Optional[str] = None
 
-    remarks: Optional[str] = None
+    feedback: Optional[str] = None
+
+    rating: Optional[float] = None
+
+
+class InterviewFeedbackRequest(BaseModel):
+
+    feedback: str
+
+    rating: float
 
 
 class InterviewResponse(BaseModel):
+
     id: int
 
     application_id: int
 
     interviewer_name: str
 
+    interviewer_email: Optional[str] = None
+
     interview_type: str
+
+    interview_round: str
 
     interview_date: date
 
@@ -209,9 +247,13 @@ class InterviewResponse(BaseModel):
 
     status: str
 
-    remarks: Optional[str] = None
+    feedback: Optional[str] = None
+
+    rating: Optional[float] = None
 
     created_at: datetime
+
+    updated_at: datetime
 
     model_config = ConfigDict(
         from_attributes=True
@@ -219,6 +261,7 @@ class InterviewResponse(BaseModel):
 
 
 class InterviewListResponse(BaseModel):
+
     interviews: List[InterviewResponse]
 
     model_config = ConfigDict(
@@ -227,6 +270,7 @@ class InterviewListResponse(BaseModel):
 
 
 class InterviewDeleteResponse(BaseModel):
+
     message: str
 
     model_config = ConfigDict(

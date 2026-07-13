@@ -1,7 +1,7 @@
 class RecommendationEngine:
 
     @staticmethod
-    def generate(score: int):
+    def predict(score: int):
 
         if score >= 85:
             recommendation = "Strongly Recommend"
@@ -39,3 +39,8 @@ class RecommendationEngine:
             "recommendation": recommendation,
             "summary": summary,
         }
+
+    # Backward compatibility
+    @staticmethod
+    def generate(score: int):
+        return RecommendationEngine.predict(score)

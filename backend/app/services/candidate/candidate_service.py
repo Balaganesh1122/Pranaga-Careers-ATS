@@ -34,7 +34,9 @@ class CandidateService:
             return existing
 
         db_candidate = Candidate(
-            full_name=candidate.full_name,
+            first_name=candidate.first_name,
+            middle_name=candidate.middle_name,
+            last_name=candidate.last_name,
             email=candidate.email,
             phone=candidate.phone,
             linkedin_url=candidate.linkedin_url,

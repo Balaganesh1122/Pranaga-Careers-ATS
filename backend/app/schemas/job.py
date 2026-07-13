@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
@@ -12,12 +12,27 @@ class JobBase(BaseModel):
     department: str
     location: str
     employment_type: str
+    work_mode: str
     experience: str
     education: str
+
+    openings: int
+
+    salary_range: str | None = None
+
     description: str
+
     responsibilities: List[str]
+
     required_skills: List[str]
-    preferred_skills: Optional[List[str]] = []
+
+    preferred_skills: List[str] = []
+
+    nice_to_have_skills: List[str] = []
+
+    application_deadline: datetime | None = None
+
+    is_active: bool = True
 
 
 # -----------------------------
@@ -31,24 +46,51 @@ class JobCreate(JobBase):
 # Update Job
 # -----------------------------
 class JobUpdate(BaseModel):
-    title: Optional[str] = None
-    department: Optional[str] = None
-    location: Optional[str] = None
-    employment_type: Optional[str] = None
-    experience: Optional[str] = None
-    education: Optional[str] = None
-    description: Optional[str] = None
-    responsibilities: Optional[List[str]] = None
-    required_skills: Optional[List[str]] = None
-    preferred_skills: Optional[List[str]] = None
+
+    title: str | None = None
+
+    department: str | None = None
+
+    location: str | None = None
+
+    employment_type: str | None = None
+
+    work_mode: str | None = None
+
+    experience: str | None = None
+
+    education: str | None = None
+
+    openings: int | None = None
+
+    salary_range: str | None = None
+
+    description: str | None = None
+
+    responsibilities: List[str] | None = None
+
+    required_skills: List[str] | None = None
+
+    preferred_skills: List[str] | None = None
+
+    nice_to_have_skills: List[str] | None = None
+
+    application_deadline: datetime | None = None
+
+    is_active: bool | None = None
 
 
 # -----------------------------
-# Response Schema
+# Response
 # -----------------------------
 class JobResponse(JobBase):
+
     id: int
+
     created_at: datetime
+
     updated_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True
+    )

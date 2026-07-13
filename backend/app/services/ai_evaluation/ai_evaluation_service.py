@@ -1,123 +1,105 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.models.resume_data import ResumeData
-from app.ai.parser.parser_service import ParserService
-from app.models.application import Application
 from app.models.job import Job
-from app.ai.ats.scorer import ATSScorer
-from app.models.ats_result import ATSResult
-from app.ai.parser.information_extractor import (
-    ResumeInformationExtractor,
-)
 
+from app.ai.ats.skill_matcher import SkillMatcher
+from app.ai.ats.scorer import ATSScorer
+from app.ai.ats.recommendation_engine import RecommendationEngine
+from app.models.ats_result import ATSResult
+from app.models.application import Application
 
 class AIEvaluationService:
 
     @staticmethod
-    def evaluate_application(
+    def evaluate(
         db: Session,
+        candidate_id: int,
+        job_id: int,
         application_id: int,
     ):
-        """
-        AI Evaluation Pipeline
 
-        Stage 1 -> Find Resume
-        Stage 2 -> Parse Resume
-        Stage 3 -> Extract Candidate Information
-        """
-
-        # ---------------------------------
-        # Stage 1 - Find Resume
-        # ---------------------------------
+        # -----------------------------------
+        # Fetch Resume
+        # -----------------------------------
 
         resume = (
             db.query(ResumeData)
             .filter(
-                ResumeData.application_id == application_id
+                ResumeData.candidate_id == candidate_id
             )
             .first()
         )
 
-        if not resume:
-            raise HTTPException(
-                status_code=404,
-                detail="Resume not found."
-            )
+        if resume is None:
+            raise ValueError("Resume not found.")
 
-        # ---------------------------------
-        # Stage 2 - Parse Resume
-        # ---------------------------------
-
-        resume_text = ParserService.extract_resume_text(
-            resume.file_path
-        )
-
-        # Save parsed text into database (optional but recommended)
-        if not resume.parsed_text:
-            resume.parsed_text = resume_text
-            db.commit()
-            db.refresh(resume)
-
-        # ---------------------------------
-        # Stage 3 - Extract Candidate Information
-        # ---------------------------------
-
-        candidate_information = (
-            ResumeInformationExtractor.extract(
-                resume_text
-            )
-        )
-        # ---------------------------------
-        # Stage 4 - Fetch Application
-        # ---------------------------------
-
-        application = (
-            db.query(Application)
-            .filter(Application.id == application_id)
-            .first()
-        )
-
-        if not application:
-            raise HTTPException(
-                status_code=404,
-                detail="Application not found."
-            )
-
-        # ---------------------------------
-        # Stage 4 - Fetch Job
-        # ---------------------------------
+        # -----------------------------------
+        # Fetch Job
+        # -----------------------------------
 
         job = (
             db.query(Job)
-            .filter(Job.id == application.job_id)
+            .filter(Job.id == job_id)
             .first()
         )
 
-        if not job:
-            raise HTTPException(
-                status_code=404,
-                detail="Job not found."
-            )
-        # ---------------------------------
-        # Stage 5 - ATS Score Calculation
-        # ---------------------------------
+        if job is None:
+            raise ValueError("Job not found.")
 
-        candidate_skills = candidate_information.get(
-            "skills",
-            []
-        )
+        # -----------------------------------
+        # Resume Skills
+        # -----------------------------------
+
+        resume_skills = []
+
+        if resume.extracted_skills:
+
+            if isinstance(resume.extracted_skills, str):
+
+                resume_skills = [
+                    s.strip()
+                    for s in resume.extracted_skills.split(",")
+                    if s.strip()
+                ]
+
+            elif isinstance(resume.extracted_skills, list):
+
+                resume_skills = resume.extracted_skills
+
+        # -----------------------------------
+        # Job Skills
+        # -----------------------------------
 
         job_skills = job.required_skills or []
 
-        ats_result = ATSScorer.calculate(
-            candidate_skills,
+        # -----------------------------------
+        # Skill Matching
+        # -----------------------------------
+
+        matched, missing = SkillMatcher.match(
+            resume_skills,
             job_skills,
         )
 
-        # ---------------------------------
-        # Stage 6 - Save ATS Result
-        # ---------------------------------
+        # -----------------------------------
+        # ATS Score
+        # -----------------------------------
+
+        score = ATSScorer.calculate(
+            matched,
+            missing,
+        )
+
+        # -----------------------------------
+        # Recommendation
+        # -----------------------------------
+
+        recommendation = RecommendationEngine.predict(score)
+
+        # -----------------------------------
+        # Save ATS Result
+        # -----------------------------------
 
         existing_result = (
             db.query(ATSResult)
@@ -129,39 +111,43 @@ class AIEvaluationService:
 
         if existing_result:
 
-            existing_result.ats_score = ats_result["ats_score"]
-            existing_result.matching_skills = ats_result["matched_skills"]
-            existing_result.missing_skills = ats_result["missing_skills"]
-            existing_result.ai_summary = ats_result["summary"]
-            existing_result.recommendation = ats_result["recommendation"]
+            existing_result.ats_score = score
+            existing_result.matching_skills = matched
+            existing_result.missing_skills = missing
+            existing_result.ai_summary = recommendation["summary"]
+            existing_result.recommendation = recommendation["recommendation"]
 
         else:
 
-            existing_result = ATSResult(
+            ats_result = ATSResult(
+
                 application_id=application_id,
-                ats_score=ats_result["ats_score"],
-                matching_skills=ats_result["matched_skills"],
-                missing_skills=ats_result["missing_skills"],
-                ai_summary=ats_result["summary"],
-                recommendation=ats_result["recommendation"],
+
+                ats_score=score,
+
+                matching_skills=matched,
+
+                missing_skills=missing,
+
+                ai_summary=recommendation["summary"],
+
+                recommendation=recommendation["recommendation"],
             )
 
-            db.add(existing_result)
+            db.add(ats_result)
 
         db.commit()
-        db.refresh(existing_result)
-        # ---------------------------------
-        # Return Result
-        # ---------------------------------
 
         return {
-            "resume": resume.file_name,
-            "candidate": candidate_information,
-            "job": {
-                "title": job.title,
-                "department": job.department,
-                "required_skills": job.required_skills,
-            },
-            "ats": ats_result,
-            "saved_result_id": existing_result.id,
+
+            "ats_score": score,
+
+            "matched_skills": matched,
+
+            "missing_skills": missing,
+
+            "recommendation": recommendation["recommendation"],
+
+            "summary": recommendation["summary"],
         }
+        return result

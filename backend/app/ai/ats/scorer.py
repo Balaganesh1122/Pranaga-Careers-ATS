@@ -5,27 +5,13 @@ from app.ai.ats.recommendation_engine import RecommendationEngine
 class ATSScorer:
 
     @staticmethod
-    def calculate(candidate_skills, job_skills):
+    def calculate(matched_skills, missing_skills):
 
-        matched, missing = SkillMatcher.compare(
-            candidate_skills,
-            job_skills,
-        )
+        total = len(matched_skills) + len(missing_skills)
 
-        total = len(job_skills)
+        if total == 0:
+            return 0
 
-        score = (
-            round((len(matched) / total) * 100)
-            if total
-            else 0
-        )
+        score = round((len(matched_skills) / total) * 100)
 
-        recommendation = RecommendationEngine.generate(score)
-
-        return {
-            "ats_score": score,
-            "matched_skills": matched,
-            "missing_skills": missing,
-            "recommendation": recommendation["recommendation"],
-            "summary": recommendation["summary"],
-        }
+        return score

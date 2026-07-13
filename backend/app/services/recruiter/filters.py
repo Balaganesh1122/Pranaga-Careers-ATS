@@ -1,19 +1,18 @@
+from sqlalchemy.orm import Query
+
 from app.models.application import Application
 from app.models.candidate import Candidate
 from app.models.job import Job
-from app.models.ats_result import ATSResult
+
 
 class RecruiterFilter:
 
     @staticmethod
-    def apply(
-        query,
-        *,
-        job_id=None,
-        status=None,
-        search=None,
-        sort_by="ats_score",
-        sort_order="desc",
+    def apply_filters(
+        query: Query,
+        job_id: int | None = None,
+        status: str | None = None,
+        search: str | None = None,
     ):
 
         if job_id:
@@ -27,31 +26,15 @@ class RecruiterFilter:
             )
 
         if search:
-            query = query.filter(
-                Candidate.full_name.ilike(f"%{search}%")
-            )
-
-        if sort_by == "ats_score":
-
-            if sort_order == "desc":
-                query = query.order_by(
-                    ATSResult.ats_score.desc()
+            query = (
+                query.join(Candidate)
+                .join(Job)
+                .filter(
+                    (Candidate.first_name.ilike(f"%{search}%")) |
+                    (Candidate.last_name.ilike(f"%{search}%")) |
+                    (Candidate.email.ilike(f"%{search}%")) |
+                    (Job.title.ilike(f"%{search}%"))
                 )
-            else:
-                query = query.order_by(
-                    ATSResult.ats_score.asc()
-                )
-
-        elif sort_by == "name":
-
-            query = query.order_by(
-                Candidate.full_name.asc()
-            )
-
-        elif sort_by == "job":
-
-            query = query.order_by(
-                Job.title.asc()
             )
 
         return query

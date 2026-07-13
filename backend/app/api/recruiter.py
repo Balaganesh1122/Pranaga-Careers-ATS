@@ -30,6 +30,7 @@ from app.schemas.recruiter import (
     InterviewResponse,
     InterviewListResponse,
     InterviewDeleteResponse,
+    InterviewFeedbackRequest,
 )
 from app.services.auth.dependencies import (
     get_current_recruiter,
@@ -38,6 +39,11 @@ from app.services.auth.dependencies import (
 from app.models.user import User
 from app.services.auth.dependencies import get_current_recruiter
 from app.models.user import User
+from app.schemas.dashboard import CandidateDetails
+
+
+
+
 
 router = APIRouter(
     prefix="/api/recruiter",
@@ -243,6 +249,31 @@ def update_interview(
         request=request,
     )
 
+@router.put(
+    "/interviews/{interview_id}/feedback",
+    response_model=InterviewResponse,
+)
+def submit_interview_feedback(
+
+    interview_id: int,
+
+    request: InterviewFeedbackRequest,
+
+    db: Session = Depends(get_db),
+):
+
+    return InterviewService.submit_feedback(
+
+        db=db,
+
+        interview_id=interview_id,
+
+        feedback=request.feedback,
+
+        rating=request.rating,
+
+    )
+
 @router.delete(
     "/interviews/{interview_id}",
     response_model=InterviewDeleteResponse,
@@ -255,4 +286,18 @@ def delete_interview(
     return InterviewService.delete_interview(
         db=db,
         interview_id=interview_id,
+    )
+
+@router.get(
+    "/candidate/{candidate_id}",
+    response_model=CandidateDetails,
+)
+def recruiter_candidate_details(
+    candidate_id: int,
+    db: Session = Depends(get_db),
+):
+
+    return DashboardService.get_candidate_details(
+        db,
+        candidate_id,
     )

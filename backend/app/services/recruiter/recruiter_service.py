@@ -54,13 +54,11 @@ class RecruiterService:
             )
         )
 
-        query = RecruiterFilter.apply(
+        query = RecruiterFilter.apply_filters(
             query=query,
             job_id=job_id,
             status=status,
             search=search,
-            sort_by=sort_by,
-            sort_order=sort_order,
         )
 
         paginated = Pagination.paginate(
@@ -75,17 +73,25 @@ class RecruiterService:
 
             applications.append(
                 RecruiterApplicationResponse(
+
                     application_id=application.id,
-                    candidate_name=candidate.full_name,
+
+                    first_name=candidate.first_name,
+
+                    middle_name=candidate.middle_name,
+
+                    last_name=candidate.last_name,
+
                     email=candidate.email,
+
                     job_title=job.title,
+
                     ats_score=ats.ats_score if ats else 0,
-                    recommendation=(
-                        ats.recommendation
-                        if ats
-                        else "Not Evaluated"
-                    ),
+
+                    recommendation=ats.recommendation if ats else "Not Evaluated",
+
                     status=application.status,
+
                     applied_at=application.created_at,
                 )
             )
@@ -146,24 +152,45 @@ class RecruiterService:
             )
 
         return RecruiterApplicationDetailsResponse(
-            application_id=application.id,
-            candidate_name=candidate.full_name,
-            email=candidate.email,
-            phone=candidate.phone,
-            linkedin_url=candidate.linkedin_url,
-            github_url=candidate.github_url,
-            portfolio_url=candidate.portfolio_url,
-            resume=resume_response,
-            job_title=job.title,
-            department=job.department,
-            application_status=application.status,
-            ats_score=ats.ats_score if ats else 0,
-            matched_skills=ats.matching_skills if ats else [],
-            missing_skills=ats.missing_skills if ats else [],
-            recommendation=ats.recommendation if ats else "Not Evaluated",
-            ai_summary=ats.ai_summary if ats else "",
-            applied_at=application.created_at,
-        )
+
+                application_id=application.id,
+
+                first_name=candidate.first_name,
+
+                middle_name=candidate.middle_name,
+
+                last_name=candidate.last_name,
+
+                email=candidate.email,
+
+                phone=candidate.phone,
+
+                linkedin_url=candidate.linkedin_url,
+
+                github_url=candidate.github_url,
+
+                portfolio_url=candidate.portfolio_url,
+
+                resume=resume_response,
+
+                job_title=job.title,
+
+                department=job.department,
+
+                application_status=application.status,
+
+                ats_score=ats.ats_score if ats else 0,
+
+                matched_skills=ats.matching_skills if ats else [],
+
+                missing_skills=ats.missing_skills if ats else [],
+
+                recommendation=ats.recommendation if ats else "Not Evaluated",
+
+                ai_summary=ats.ai_summary if ats else "",
+
+                applied_at=application.created_at,
+            )
 
     @staticmethod
     def update_application_status(
@@ -237,7 +264,11 @@ class RecruiterService:
             candidates.append(
                 TopCandidateResponse(
                     application_id=application.id,
-                    candidate_name=candidate.full_name,
+                    first_name=candidate.first_name,
+
+                    middle_name=candidate.middle_name,
+
+                    last_name=candidate.last_name,
                     email=candidate.email,
                     job_title=job.title,
                     ats_score=ats.ats_score,

@@ -1,30 +1,57 @@
 from datetime import datetime
-from typing import Optional
-
 from pydantic import BaseModel, ConfigDict
 
 
-class ApplicationBase(BaseModel):
+# ============================================================
+# Existing ATS
+# ============================================================
+
+class ApplicationCreate(BaseModel):
     candidate_id: int
+    job_id: int
+
+
+# ============================================================
+# Candidate Apply
+# ============================================================
+
+class JobApplicationCreate(BaseModel):
+
+    candidate_id: int
+
     job_id: int
 
     work_authorization: bool
 
-    notice_period: Optional[str] = None
+    privacy_consent: bool
 
-    internship_available: Optional[bool] = None
+    notice_period: str | None = None
+
+    internship_available: bool | None = None
+
+
+# ============================================================
+# Response
+# ============================================================
+
+class JobApplicationResponse(BaseModel):
+
+    id: int
+
+    candidate_id: int
+
+    job_id: int
+
+    status: str
+
+    work_authorization: bool
 
     privacy_consent: bool
 
+    notice_period: str | None = None
 
-class ApplicationCreate(ApplicationBase):
-    pass
+    internship_available: bool | None = None
 
-
-class ApplicationResponse(ApplicationBase):
-    id: int
-    status: str
     created_at: datetime
-    updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

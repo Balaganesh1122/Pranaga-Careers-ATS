@@ -75,11 +75,6 @@ class Application(Base):
     back_populates="applications"
     )
 
-    resume = relationship(
-    "ResumeData",
-    back_populates="application",
-    uselist=False,
-    )
 
     ats_result = relationship(
     "ATSResult",
