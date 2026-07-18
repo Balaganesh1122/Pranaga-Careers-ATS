@@ -1,104 +1,235 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Application Received</title>
 </head>
 
-<body style="margin:0;padding:0;background:#f4f6f9;font-family:Arial,Helvetica,sans-serif;">
+<body style="
+margin:0;
+padding:0;
+background:#f4f6f9;
+font-family:Arial,Helvetica,sans-serif;
+">
 
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f9;padding:40px 0;">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
 
 <tr>
 <td align="center">
 
-<table width="650" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:10px;overflow:hidden;">
+<table width="650" cellpadding="0" cellspacing="0"
+style="
+background:#ffffff;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+">
 
 <!-- Header -->
 
 <tr>
-<td style="background:#0F4C81;padding:25px;text-align:center;">
 
-<h1 style="color:white;margin:0;">
-Pranaga Solutions
-</h1>
+<td
+style="
+padding:30px;
+border-bottom:1px solid #ececec;
+">
 
-<p style="color:#d9e7f5;margin-top:8px;">
-AI Powered Careers Portal
-</p>
+<table width="100%">
+
+<tr>
+
+<td width="70">
+
+<img
+src="https://www.pranagasolutions.in/assets/logo.png"
+width="55"
+alt="Pranaga Solutions"
+/>
 
 </td>
+
+<td>
+
+<h2
+style="
+margin:0;
+color:#0b3c78;
+font-size:28px;
+">
+Pranaga Solutions
+</h2>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
 </tr>
 
 <!-- Body -->
 
 <tr>
-<td style="padding:40px;">
 
-<h2 style="color:#333;">
-Hello {{ candidate_name }},
+<td style="padding:45px;">
+
+<h2
+style="
+margin-top:0;
+color:#222;
+font-size:28px;
+">
+Thank you for applying to Pranaga Solutions,
+{{candidate_name}}!
 </h2>
 
-<p style="font-size:16px;color:#555;line-height:28px;">
+<p
+style="
+font-size:16px;
+line-height:28px;
+color:#555;
+">
 
-Thank you for applying to
-
-<strong>{{ company_name }}</strong>.
-
-</p>
-
-<p style="font-size:16px;color:#555;line-height:28px;">
-
-We have successfully received your application for the position of
-
-<strong>{{ job_title }}</strong>.
-
-</p>
-
-<p style="font-size:16px;color:#555;line-height:28px;">
-
-Our recruitment team will carefully review your profile.
-
-If your qualifications match our requirements, we will contact you regarding the next steps.
-
-</p>
-
-<table
-style="margin-top:30px;
-background:#F3F7FB;
-padding:20px;
-width:100%;
-border-radius:8px;">
-
-<tr>
-<td>
-
-<b>Application Status</b>
+Dear <strong>{{candidate_name}}</strong>,
 
 <br><br>
 
-✅ Successfully Submitted
+Thank you for your interest in joining
+<strong>Pranaga Solutions.</strong>
+
+<br><br>
+
+We have successfully received your application
+for the position of
+
+<strong>{{job_title}}</strong>.
+
+<br><br>
+
+We appreciate the time you've invested in your application
+and are excited to learn more about your experience.
+
+</p>
+
+<hr style="border:none;border-top:1px solid #ececec;margin:35px 0;">
+
+<h3
+style="
+margin-bottom:20px;
+color:#0b3c78;
+">
+What happens next?
+</h3>
+
+<p
+style="
+font-size:16px;
+line-height:30px;
+color:#555;
+">
+
+✔ Our Talent Acquisition team will review your application.
+
+<br>
+
+✔ If your qualifications match the role,
+our recruitment team will contact you.
+
+<br>
+
+✔ Due to the number of applications received,
+only shortlisted candidates may be contacted.
+
+</p>
+
+<hr style="border:none;border-top:1px solid #ececec;margin:35px 0;">
+
+<h3
+style="
+color:#0b3c78;
+">
+Discover Pranaga Solutions
+</h3>
+
+<p
+style="
+font-size:16px;
+line-height:28px;
+color:#555;
+">
+
+While you wait, we invite you to explore our company,
+our services,
+our culture,
+and the innovative work we do.
+
+</p>
+
+<table cellpadding="0" cellspacing="0">
+
+<tr>
+
+<td
+style="
+background:#0b5ed7;
+border-radius:6px;
+">
+
+<a
+href="https://www.pranagasolutions.in"
+style="
+display:inline-block;
+padding:15px 35px;
+color:#ffffff;
+font-size:16px;
+font-weight:bold;
+text-decoration:none;
+">
+
+Visit Our Website →
+
+</a>
 
 </td>
+
 </tr>
 
 </table>
 
-<p style="margin-top:35px;font-size:16px;color:#555;line-height:28px;">
+<br><br>
 
-Thank you for your interest in joining our team.
+<p
+style="
+font-size:16px;
+line-height:28px;
+color:#555;
+">
 
-We appreciate the time you invested in applying.
+Thank you once again for choosing
+<strong>Pranaga Solutions.</strong>
+
+We wish you success throughout the recruitment process
+and look forward to staying connected.
 
 </p>
 
-<p style="margin-top:40px;">
+<br>
+
+<p
+style="
+font-size:16px;
+line-height:28px;
+">
 
 Best Regards,
 
 <br><br>
 
-<strong>Recruitment Team</strong>
+<strong>Talent Acquisition Team</strong>
 
 <br>
 
@@ -107,6 +238,7 @@ Pranaga Solutions
 </p>
 
 </td>
+
 </tr>
 
 <!-- Footer -->
@@ -114,29 +246,79 @@ Pranaga Solutions
 <tr>
 
 <td
-style="background:#f5f5f5;
-padding:20px;
-text-align:center;
+align="center"
+style="
+background:#f8f9fa;
+padding:35px;
 font-size:13px;
-color:#777;">
+color:#777;
+">
 
-© {{ company_name }}
+<p
+style="
+margin:0;
+font-size:14px;
+color:#555;
+">
+Stay Connected With Us
+</p>
 
 <br>
 
-This is an automated email. Please do not reply.
+<a
+href="https://www.linkedin.com/company/pranagasolutions/"
+target="_blank"
+style="text-decoration:none;margin-right:12px;"
+>
+
+<img
+src="https://img.icons8.com/color/48/linkedin.png"
+width="34"
+alt="LinkedIn"
+/>
+
+</a>
+
+<a
+href="https://www.instagram.com/pranagasolutions/"
+target="_blank"
+style="text-decoration:none;"
+>
+
+<img
+src="https://img.icons8.com/color/48/instagram-new.png"
+width="34"
+alt="Instagram"
+/>
+
+</a>
+
+<br><br>
+
+<a
+href="https://www.pranagasolutions.in"
+style="
+color:#0b5ed7;
+font-size:15px;
+font-weight:bold;
+text-decoration:none;
+"
+>
+www.pranagasolutions.in
+</a>
+
+<br><br>
+
+<span style="color:#999;">
+© 2026 Pranaga Solutions
+</span>
+
+<br><br>
+
+<span style="font-size:12px;color:#999;">
+This is an automated email. Please do not reply to this message.
+</span>
 
 </td>
 
 </tr>
-
-</table>
-
-</td>
-
-</tr>
-
-</table>
-
-</body>
-</html>
