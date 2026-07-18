@@ -9,7 +9,7 @@ from app.schemas.application import JobApplicationCreate
 from app.services.ai_evaluation.ai_evaluation_service import (
     AIEvaluationService,
 )
-
+from app.services.email.email_service import EmailService
 
 class ApplicationService:
 
@@ -114,5 +114,32 @@ class ApplicationService:
         except Exception as e:
 
             print(f"AI Evaluation skipped: {e}")
+
+
+        # -----------------------------------------
+        # Send Application Confirmation Email
+        # -----------------------------------------
+
+        try:
+
+            EmailService.send_template_email(
+                db=db,
+                application_id=new_application.id,
+                to_email=candidate.email,
+                subject="Application Received - Pranaga Solutions",
+                template_name="application_confirmation.html",
+                email_type="Application",
+                context={
+                    "candidate_name": candidate.first_name,
+                    "job_title": job.title,
+                    "company_name": "Pranaga Solutions",
+                },
+            )
+
+        except Exception as e:
+
+            print(f"Email sending failed: {e}")
+
+
 
         return new_application

@@ -4,17 +4,18 @@ from sqlalchemy import (
     String,
     ForeignKey,
     DateTime,
+    Text,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
-
+from sqlalchemy import Text
 
 class EmailLog(Base):
     __tablename__ = "email_logs"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
 
     application_id = Column(
         Integer,
@@ -22,15 +23,46 @@ class EmailLog(Base):
         nullable=False,
     )
 
-    recipient = Column(String(150))
+    recipient = Column(
+        String(150),
+        nullable=False,
+    )
 
-    subject = Column(String(255))
+    subject = Column(
+        String(255),
+        nullable=False,
+    )
 
-    status = Column(String(50))
+    email_type = Column(
+        String(100),
+        nullable=False,
+    )
+
+
+    # Welcome
+    # Application
+    # Interview
+    # Offer
+    # Rejection
+
+    status = Column(
+        String(50),
+        nullable=False,
+        default="Sent",
+    )
+    # Sent / Failed
+
+    error_message = Column(
+        Text,
+        nullable=True,
+    )
 
     sent_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
     )
 
-    application = relationship("Application")
+    application = relationship(
+        "Application",
+        back_populates="email_logs",
+    )

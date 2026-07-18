@@ -17,6 +17,8 @@ from app.schemas.recruiter import (
     TopCandidateResponse,
     UpdateApplicationStatusResponse,
 )
+from app.services.email.email_service import EmailService
+
 
 
 class RecruiterService:
@@ -217,6 +219,55 @@ class RecruiterService:
 
         db.commit()
         db.refresh(application)
+
+        # -----------------------------------------
+        # Send Candidate Status Email
+        # -----------------------------------------
+
+        try:
+
+            candidate = (
+                db.query(Candidate)
+                .filter(Candidate.id == application.candidate_id)
+                .first()
+            )
+
+            job = (
+                db.query(Job)
+                .filter(Job.id == application.job_id)
+                .first()
+            )
+
+            template_map = {
+                "Shortlisted": "shortlisted.html",
+                "Rejected": "rejection.html",
+                "Hired": "welcome.html",
+            }
+
+            subject_map = {
+                "Shortlisted": "Congratulations! You have been shortlisted",
+                "Rejected": "Application Update - Pranaga Solutions",
+                "Hired": "Welcome to Pranaga Solutions",
+            }
+
+            if status in template_map:
+
+                EmailService.send_template_email(
+                    db=db,
+                    application_id=application.id,
+                    to_email=candidate.email,
+                    subject=subject_map[status],
+                    template_name=template_map[status],
+                    email_type=status,
+                    context={
+                        "candidate_name": f"{candidate.first_name} {candidate.last_name}",
+                        "job_title": job.title,
+                        "company_name": "Pranaga Solutions",
+                    },
+                )
+
+        except Exception as e:
+            print(f"Status email failed: {e}")
 
         return UpdateApplicationStatusResponse(
             message="Application status updated successfully.",

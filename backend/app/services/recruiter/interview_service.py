@@ -3,6 +3,10 @@ from sqlalchemy.orm import Session
 
 from app.models.application import Application
 from app.models.interview import Interview
+from app.models.candidate import Candidate
+from app.models.job import Job
+
+from app.services.email.email_service import EmailService
 
 from app.schemas.recruiter import (
     InterviewCreate,
@@ -66,6 +70,47 @@ class InterviewService:
         db.commit()
 
         db.refresh(interview)
+
+        # =====================================================
+        # Send Interview Email
+        # =====================================================
+
+        try:
+
+            candidate = (
+                db.query(Candidate)
+                .filter(Candidate.id == application.candidate_id)
+                .first()
+            )
+
+            job = (
+                db.query(Job)
+                .filter(Job.id == application.job_id)
+                .first()
+            )
+
+            EmailService.send_template_email(
+                db=db,
+                application_id=application.id,
+                to_email=candidate.email,
+                subject="Interview Scheduled - Pranaga Solutions",
+                template_name="interview.html",
+                email_type="Interview",
+                context={
+                    "candidate_name": f"{candidate.first_name} {candidate.last_name}",
+                    "job_title": job.title,
+                    "company_name": "Pranaga Solutions",
+                    "interview_date": request.interview_date,
+                    "interview_time": request.interview_time,
+                    "interviewer_name": request.interviewer_name,
+                    "meeting_link": request.meeting_link,
+                    "location": request.location,
+                },
+            )
+
+        except Exception as e:
+
+            print(f"Interview email failed: {e}")
 
         return InterviewResponse.model_validate(interview)
 

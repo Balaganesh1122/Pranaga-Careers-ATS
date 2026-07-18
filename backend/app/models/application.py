@@ -46,13 +46,25 @@ class Application(Base):
         nullable=False,
     )
 
-    work_authorization = Column(Boolean, nullable=False)
+    work_authorization = Column(
+        Boolean,
+        nullable=False,
+    )
 
-    notice_period = Column(String(50), nullable=True)
+    notice_period = Column(
+        String(50),
+        nullable=True,
+    )
 
-    internship_available = Column(Boolean, nullable=True)
+    internship_available = Column(
+        Boolean,
+        nullable=True,
+    )
 
-    privacy_consent = Column(Boolean, nullable=False)
+    privacy_consent = Column(
+        Boolean,
+        nullable=False,
+    )
 
     created_at = Column(
         DateTime(timezone=True),
@@ -65,35 +77,50 @@ class Application(Base):
         onupdate=func.now(),
     )
 
+    # ==========================================================
+    # Relationships
+    # ==========================================================
+
     candidate = relationship(
-    "Candidate",
-    back_populates="applications"
+        "Candidate",
+        back_populates="applications",
     )
 
     job = relationship(
-    "Job",
-    back_populates="applications"
+        "Job",
+        back_populates="applications",
     )
 
-
     ats_result = relationship(
-    "ATSResult",
-    back_populates="application",
-    uselist=False,
+        "ATSResult",
+        back_populates="application",
+        uselist=False,
     )
 
     screening_answer = relationship(
-    "ScreeningAnswer",
-    back_populates="application",
-    uselist=False,
+        "ScreeningAnswer",
+        back_populates="application",
+        uselist=False,
     )
+
     notes = relationship(
-    "RecruiterNote",
-    back_populates="application",
-    cascade="all, delete-orphan",
-)
+        "RecruiterNote",
+        back_populates="application",
+        cascade="all, delete-orphan",
+    )
+
     interviews = relationship(
-    "Interview",
-    back_populates="application",
-    cascade="all, delete-orphan",
-)
+        "Interview",
+        back_populates="application",
+        cascade="all, delete-orphan",
+    )
+
+    # ==========================================================
+    # Email Logs
+    # ==========================================================
+
+    email_logs = relationship(
+        "EmailLog",
+        back_populates="application",
+        cascade="all, delete-orphan",
+    )

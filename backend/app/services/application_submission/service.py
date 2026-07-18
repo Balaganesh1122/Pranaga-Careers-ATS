@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.models.candidate import Candidate
 from app.models.application import Application
-
+from app.services.email.email_service import EmailService
 
 class ApplicationSubmissionService:
 
@@ -53,3 +53,6 @@ class ApplicationSubmissionService:
             "candidate_id": candidate.id,
             "application_id": application.id,
         }
+    
+
+

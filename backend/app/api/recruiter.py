@@ -40,7 +40,7 @@ from app.models.user import User
 from app.services.auth.dependencies import get_current_recruiter
 from app.models.user import User
 from app.schemas.dashboard import CandidateDetails
-
+from app.services.email.email_log_service import EmailLogService
 
 
 
@@ -301,3 +301,10 @@ def recruiter_candidate_details(
         db,
         candidate_id,
     )
+
+@router.get("/email-logs")
+def get_email_logs(
+    db: Session = Depends(get_db),
+):
+
+    return EmailLogService.get_all_logs(db)

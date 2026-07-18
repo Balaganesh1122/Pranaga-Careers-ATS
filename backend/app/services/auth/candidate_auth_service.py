@@ -7,7 +7,7 @@ from app.core.security import (
     verify_password,
 )
 from app.core.jwt_handler import create_access_token
-
+from app.services.email.email_service import EmailService
 
 class CandidateAuthService:
 
@@ -47,6 +47,25 @@ class CandidateAuthService:
         db.add(user)
         db.commit()
         db.refresh(user)
+
+        try:
+
+            EmailService.send_template_email(
+                db=db,
+                application_id=1,
+                to_email=user.email,
+                subject="Welcome to Pranaga Careers",
+                template_name="welcome_email.html",
+                email_type="Welcome",
+                context={
+                    "candidate_name": user.full_name,
+                    "company_name": "Pranaga Solutions",
+                },
+            )
+
+        except Exception as e:
+
+            print(f"Welcome email failed: {e}")
 
         token = create_access_token(
             {

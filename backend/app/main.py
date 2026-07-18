@@ -25,6 +25,9 @@ from app.api.candidate_profile import router as candidate_profile_router
 from app.api.resume_upload import router as resume_upload_router
 from app.api.job_application import router as job_application_router
 from app.api.candidate_dashboard import router as candidate_dashboard_router
+from app.api.recruiter_analytics import router as recruiter_analytics_router
+from app.api.application_submission import router as application_submission_router
+from app.api.test_email import router as test_email_router
 
 
 
@@ -55,6 +58,9 @@ app.include_router(candidate_profile_router)
 app.include_router(resume_upload_router)
 app.include_router(job_application_router)
 app.include_router(candidate_dashboard_router)
+app.include_router(recruiter_analytics_router)
+app.include_router(test_email_router)
+
 
 
 
